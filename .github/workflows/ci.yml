@@ -30,6 +30,7 @@ jobs:
       run: ./gradlew build
 
     - name: Build and Push Docker Image
+      if: github.event_name == 'push'
       uses: mr-smithers-excellent/docker-build-push@v4
       with:
         image: junwen2018/demo-app
