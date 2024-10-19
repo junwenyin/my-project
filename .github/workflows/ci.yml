@@ -55,10 +55,6 @@ jobs:
         approved=$(echo '${{ steps.openai.outputs.completion }}' | jq -r '.approved')
         echo "Approved: $approved"
         echo "approved=$approved" >> $GITHUB_ENV
-
-    - name: Debug Context
-      run: |
-        echo "Context: ${{ toJson(github) }}"
     
     # Approve the PR if the "approved" attribute is true
     - name: Approve Pull Request
