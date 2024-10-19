@@ -35,4 +35,15 @@ jobs:
         registry: docker.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Get ChatGPT completion
+      id: chatgpt
+      uses: cahaseler/openai-chatgpt-action@v1
+      with:
+        apiKey: ${{ secrets.OPENAI_API_KEY }}
+        prompt: 'Please generate github best practices formatted pull request content in markdown based on the following commit messages and diffs'
+        input: 'put whatever you want in here'
+        model: 'gpt-4o'
+        temperature: 1
+        max_tokens: 2000
          
