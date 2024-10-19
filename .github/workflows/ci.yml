@@ -63,16 +63,9 @@ jobs:
     # Approve the PR if the "approved" attribute is true
     - name: Approve Pull Request
       if: github.event_name == 'pull_request' && env.approved == 'true'
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          console.log('Debugging the GitHub context:', context); // Debugging line
-          const prNumber = context.payload.pull_request.number;
-          await github.pulls.createReview({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: prNumber,
-            event: 'APPROVE',
-            body: 'The automated process has approved this PR.'
-          });         
+      uses: octokit/request-action@v2.4.0
+        with:
+          route: POST /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          body: 'The automated process has approved this PR.'
+          event: APPROVE
