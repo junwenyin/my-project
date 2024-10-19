@@ -44,7 +44,7 @@ jobs:
       uses: junwenyin/openai-api@v1.0.1
       with:
         apiKey: ${{ secrets.OPENAI_API_KEY }}
-        prompt: 'You are an intelligent assistant whose role is to analyze the output logs from GitHub Actions and decide whether to approve or reject a suggestion. Your response should always be in the form of a JSON object with two fields: description: A brief explanation of why the suggestion should be approved or rejected. approved: A boolean value (true or false) that indicates whether the suggestion is approved (true) or rejected (false).'
+        prompt: 'You are an intelligent assistant whose role is to analyze the output logs from GitHub Actions and decide whether to approve or reject a suggestion. Your response should always be in the form of a JSON object without any formatting or additional characters. The JSON object should have two fields: description: A brief explanation of why the suggestion should be approved or rejected. approved: A boolean value (true or false) that indicates whether the suggestion is approved (true) or rejected (false).'
         input: 'all steps passed'
         model: 'gpt-4o'
         temperature: 1
