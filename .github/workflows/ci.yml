@@ -27,6 +27,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
+      if: github.event_name == 'push'
       run: ./gradlew build
 
     - name: Build and Push Docker Image
@@ -51,8 +52,10 @@ jobs:
     - name: parse_json
       run: |
         openaiResult="${{ steps.openai.outputs.completion }}"
-        echo  "$openaiResult"
-        echo "::set-output name=approved::$(echo $openaiResult | jq -r '.approved')"
+        echo "$openaiResult"
+        approved="$(echo $openaiResult | jq -r '.approved')"
+        echo "$approved"
+        echo "::set-output name=approved::$approved"
         
     # Approve the PR if the "approved" attribute is true
     - name: Approve Pull Request
