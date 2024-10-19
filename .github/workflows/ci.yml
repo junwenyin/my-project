@@ -64,8 +64,8 @@ jobs:
     - name: Approve Pull Request
       if: github.event_name == 'pull_request' && env.approved == 'true'
       uses: octokit/request-action@v2.4.0
-        with:
-          route: POST /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          body: 'The automated process has approved this PR.'
-          event: APPROVE
+      with:
+        route: POST /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        body: 'The automated process has approved this PR.'
+        event: APPROVE
