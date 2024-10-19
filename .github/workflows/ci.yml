@@ -69,15 +69,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # Merge the PR if the "approved" attribute is true
-    - name: Approve Pull Request
+    - name: Mergr Pull Request
       if: github.event_name == 'pull_request' && env.approved == 'true'
       uses: octokit/request-action@v2.4.0
       with:
         route: POST /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge
-        body: |
-          {
-            "commit_title": 'Expand enum',
-            "commit_message": 'Add a new value to the merge_method enum',
-          }
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
