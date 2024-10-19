@@ -46,7 +46,24 @@ jobs:
         model: 'gpt-4o'
         temperature: 1
         max_tokens: 2000
-    - name: Print
+    - name: parse_json
       run: |
-        echo  "${{ steps.openai.outputs.completion }}"
-         
+        openaiResult="${{ steps.openai.outputs.completion }}"
+        echo  "$openaiResult"
+        echo "::set-output name=approved::$(echo $openaiResult | jq -r '.approved')"
+        
+    # Approve the PR if the "approved" attribute is true
+    - name: Approve Pull Request
+      if: github.event_name == 'pull_request' && steps.parse_json.outputs.approved == 'true'
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const prNumber = context.payload.pull_request.number;
+          await github.pulls.createReview({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: prNumber,
+            event: 'APPROVE',
+            body: 'The automated process has approved this PR.'
+          });         
