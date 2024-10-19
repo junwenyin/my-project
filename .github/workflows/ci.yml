@@ -38,7 +38,7 @@ jobs:
         
     - name: Get ChatGPT completion
       id: openai
-      uses: cahaseler/openai-api@v1.0.0
+      uses: junwenyin/openai-api@v1.0.1
       with:
         apiKey: ${{ secrets.OPENAI_API_KEY }}
         prompt: 'Please generate github best practices formatted pull request content in markdown based on the following commit messages and diffs'
