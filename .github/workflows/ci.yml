@@ -37,7 +37,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         
     - name: Get ChatGPT completion
-      id: chatgpt
+      id: openai
       uses: cahaseler/openai-api@v1.0.0
       with:
         apiKey: ${{ secrets.OPENAI_API_KEY }}
@@ -46,4 +46,7 @@ jobs:
         model: 'gpt-4o'
         temperature: 1
         max_tokens: 2000
+    - name: Print
+      run: |
+        echo  "${{ steps.openai.outputs.completion }}"
          
