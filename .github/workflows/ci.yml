@@ -51,10 +51,11 @@ jobs:
         max_tokens: 2000
     - name: parse_json
       run: |
+        echo  "${{ steps.openai.outputs.completion }}"
         openaiResult="${{ steps.openai.outputs.completion }}"
-        echo "$openaiResult"
-        approved="$(echo $openaiResult | jq -r '.approved')"
-        echo "$approved"
+        echo "OpenAI Result: $openaiResult"
+        approved=$(echo "$openaiResult" | jq -r '.approved')
+        echo "Approved: $approved"
         echo "::set-output name=approved::$approved"
         
     # Approve the PR if the "approved" attribute is true
