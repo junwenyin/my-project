@@ -55,7 +55,11 @@ jobs:
         approved=$(echo '${{ steps.openai.outputs.completion }}' | jq -r '.approved')
         echo "Approved: $approved"
         echo "approved=$approved" >> $GITHUB_ENV
-        
+
+    - name: Debug Context
+      run: |
+        echo "Context: ${{ toJson(github) }}"
+    
     # Approve the PR if the "approved" attribute is true
     - name: Approve Pull Request
       if: github.event_name == 'pull_request' && env.approved == 'true'
@@ -63,6 +67,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
+          console.log('Debugging the GitHub context:', context); // Debugging line
           const prNumber = context.payload.pull_request.number;
           await github.pulls.createReview({
             owner: context.repo.owner,
