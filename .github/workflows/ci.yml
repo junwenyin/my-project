@@ -54,11 +54,11 @@ jobs:
         echo '${{ steps.openai.outputs.completion }}'
         approved=$(echo '${{ steps.openai.outputs.completion }}' | jq -r '.approved')
         echo "Approved: $approved"
-        echo "::set-output name=approved::$approved"
+        echo "approved=$approved" >> $GITHUB_ENV
         
     # Approve the PR if the "approved" attribute is true
     - name: Approve Pull Request
-      if: github.event_name == 'pull_request' && steps.parse_json.outputs.approved == 'true'
+      if: github.event_name == 'pull_request' && env.approved == 'true'
       uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
