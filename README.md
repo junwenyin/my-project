@@ -15,5 +15,8 @@ curl -L -o opa https://openpolicyagent.org/downloads/v0.69.0/opa_linux_amd64_sta
 chmod 755 ./opa
 sudo mv ./opa /usr/local/bin/
 
+
+terraform plan -out=tfplan
+terraform show -json tfplan > tfplan.json
 opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terraform.analysis.resource_change_summary"
 
