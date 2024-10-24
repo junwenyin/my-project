@@ -1,6 +1,6 @@
 # Define the input as the Terraform plan JSON
 package terraform.analysis
-import future.keywords.if
+import rego.v1
 
 default authz := false
 
@@ -11,19 +11,19 @@ authz if {
 }
 
 # Rule to identify created resources
-created_resources[resource] {
+created_resources contains resource if {
     input.resource_changes[_].change.actions[_] == "create"
     resource := input.resource_changes[_].address
 }
 
 # Rule to identify updated resources
-updated_resources[resource] {
+updated_resources contains resource if {
     input.resource_changes[_].change.actions[_] == "update"
     resource := input.resource_changes[_].address
 }
 
 # Rule to identify deleted resources
-deleted_resources[resource] {
+deleted_resources contains resource if {
     input.resource_changes[_].change.actions[_] == "delete"
     resource := input.resource_changes[_].address
 }
