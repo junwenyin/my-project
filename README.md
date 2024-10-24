@@ -11,3 +11,5 @@
     docker tag java-app demo-app:java-1.0
     
 ##### trigger cicd
+
+opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terraform.analysis.total_changes"
