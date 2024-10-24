@@ -12,5 +12,8 @@ jobs:
       with:
         version: latest
 
+    - name: OPA Version
+      run: opa version
+
     - name: Run OPA Tests
       run: opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terraform.analysis.total_changes"
