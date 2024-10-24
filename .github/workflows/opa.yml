@@ -31,7 +31,5 @@ jobs:
       run: terraform show -json tfplan2 > tfplan2.json
       working-directory: terraform
 
-
-
     - name: Run OPA Tests
       run: opa eval --data  tests/terraform.rego --input  terraform/tfplan2.json "data.terraform.analysis.resource_change_summary"

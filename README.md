@@ -11,5 +11,9 @@
     docker tag java-app demo-app:java-1.0
     
 ##### trigger cicd
+curl -L -o opa https://openpolicyagent.org/downloads/v0.69.0/opa_linux_amd64_static
+chmod 755 ./opa
+sudo mv ./opa /usr/local/bin/
 
-opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terraform.analysis.total_changes"
+opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terraform.analysis.resource_change_summary"
+
