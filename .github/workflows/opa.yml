@@ -1,0 +1,53 @@
+name: Run OPA Tests
+on: [push]
+jobs:
+  Run-OPA-Tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+
+    - name: Setup OPA
+      uses: open-policy-agent/setup-opa@v2
+      with:
+        version: latest
+
+    - name: OPA Version
+      run: opa version
+
+    - uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: latest
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: terraform
+    
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan2
+      working-directory: terraform
+
+    - name: Terraform Show
+      run: terraform show -json tfplan2 > tfplan2.json
+      working-directory: terraform
+
+    - name: Run OPA Tests
+      run: |
+        opa eval --data  tests/terraform.rego --input  terraform/tfplan2.json "data.terraform.analysis.resource_change_summary" > opa_result.json
+        cat opa_result.json
+        opa_result=$(jq -c '.result[0].expressions[0].value' opa_result.json)
+        echo $opa_result
+        escaped_result=$(echo "$opa_result" | sed 's/"/\\"/g')
+        echo "opa_result=$escaped_result" >> $GITHUB_ENV
+
+    - name: Send custom JSON data to Slack workflow
+      id: slack
+      uses: slackapi/slack-github-action@v1.27.0
+      with:
+        # This data can be any valid JSON from a previous step in the GitHub Action
+        payload: |
+          {
+            "text": "Terraform Analysis Summary: ${{ env.opa_result }}"
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
