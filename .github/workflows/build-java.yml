@@ -11,6 +11,11 @@ on:
         type: string
         required: false
         default: '8'
+      distribution:
+        description: 'Specify the java distribution'
+        type: string
+        required: false
+        default: 'oracle'
 
 jobs:
   build-java:
@@ -33,6 +38,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         java-version: ${{ inputs.java_version }}
+        distribution: ${{ inputs.distribution }}
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
