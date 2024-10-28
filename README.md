@@ -20,3 +20,4 @@ terraform plan -out=tfplan
 terraform show -json tfplan > tfplan.json
 opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terraform.analysis.resource_change_summary"
 
+test
