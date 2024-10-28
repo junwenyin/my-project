@@ -1,13 +1,18 @@
-# Define the input as the Terraform plan JSON
-package terraform.analysis
+package terraform.policy.resource_change_limits
+
 import rego.v1
 
 default authz := false
 
+# Define thresholds for each type of change
+max_creates = 10
+max_updates = 0
+max_deletes = 0
+
 authz if {
-	resource_change_summary.total_updated == 0
-	resource_change_summary.total_deleted == 0
-	resource_change_summary.total_created > 0
+	resource_change_summary.total_updated <= max_updates
+	resource_change_summary.total_deleted <= max_deletes
+	resource_change_summary.total_created <= max_creates
 }
 
 # Rule to identify created resources
@@ -40,4 +45,17 @@ total_created := count(created_resources)
 total_updated := count(updated_resources)
 total_deleted := count(deleted_resources)
 
+deny contains msg if {
+  total_created > max_creates
+  msg := sprintf("Too many resources to create: %d. Limit is %d.", [total_created, max_creates])
+}
 
+deny contains msg if {
+  total_updated > max_updates
+  msg := sprintf("Too many resources to update: %d. Limit is %d.", [total_updated, max_updates])
+}
+
+deny contains msg if {
+  total_deleted > max_deletes
+  msg := sprintf("Too many resources to delete: %d. Limit is %d.", [total_deleted, max_deletes])
+}
