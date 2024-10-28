@@ -31,7 +31,7 @@ jobs:
       if: inputs.is_validated == 'true' && inputs.pr_number != null
       uses: octokit/request-action@v2.4.0
       with:
-        route: POST /repos/${{ github.repository }}/pulls/${{ input.pr_number }}/reviews
+        route: POST /repos/${{ github.repository }}/pulls/${{ inputs.pr_number }}/reviews
         body: 'The automated process has approved this PR.'
         owner: review_bot
         event: APPROVE
@@ -43,6 +43,6 @@ jobs:
       if: inputs.is_validated == 'true' && inputs.pr_number != null
       uses: octokit/request-action@v2.4.0
       with:
-        route: PUT /repos/${{ github.repository }}/pulls/${{ input.pr_number }}/merge
+        route: PUT /repos/${{ github.repository }}/pulls/${{ inputs.pr_number }}/merge
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
