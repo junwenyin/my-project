@@ -13,6 +13,15 @@ jobs:
     - name: Check out repository code
       uses: actions/checkout@v3
 
+    # Print the GitHub event context
+    - name: Print GitHub Event Context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: |
+        echo "GitHub Event Context:"
+        echo "$GITHUB_CONTEXT"
+      shell: bash
+
     - uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: latest
