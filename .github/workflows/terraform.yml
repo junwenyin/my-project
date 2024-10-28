@@ -34,11 +34,7 @@ jobs:
       with:
         name: terraform-plan-${{ github.sha }}
         path: terraform/tfplan.json
+        retention-days: 1
 
-    - name: Download Terraform Plan
-      uses: actions/download-artifact@v4
-      with:
-        name: terraform-plan-${{ github.sha }}
-        path: ./terraform
 
     
