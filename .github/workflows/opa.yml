@@ -6,9 +6,16 @@ on:
 jobs:
   Run-OPA-Tests:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success'
     steps:
     - name: Check out repository code
       uses: actions/checkout@v3
+
+    # Print the GitHub event context
+    - name: Print GitHub Event Context
+      run: |
+        echo "GitHub Event Context:"
+        echo "${{ toJson(github) }}"
 
     - name: Setup OPA
       uses: open-policy-agent/setup-opa@v2
@@ -43,14 +50,23 @@ jobs:
         escaped_result=$(echo "$opa_result" | sed 's/"/\\"/g')
         echo "opa_result=$escaped_result" >> $GITHUB_ENV
 
-    - name: Send custom JSON data to Slack workflow
-      id: slack
-      uses: slackapi/slack-github-action@v1.27.0
+    # Approve the PR if the "approved" attribute is true
+    - name: Approve Pull Request
+      if: github.event_name == 'pull_request' && env.approved == 'true'
+      uses: octokit/request-action@v2.4.0
       with:
-        # This data can be any valid JSON from a previous step in the GitHub Action
-        payload: |
-          {
-            "text": "Terraform Analysis Summary: ${{ env.opa_result }}"
-          }
+        route: POST /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews
+        body: 'The automated process has approved this PR.'
+        owner: review_bot
+        event: APPROVE
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # Merge the PR if the "approved" attribute is true
+    - name: Mergr Pull Request
+      if: github.event_name == 'pull_request' && env.approved == 'true'
+      uses: octokit/request-action@v2.4.0
+      with:
+        route: PUT /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/merge
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
