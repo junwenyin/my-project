@@ -1,0 +1,39 @@
+name: Terraform
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    types: [opened, synchronize]
+jobs:
+  Run-Terraform:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v3
+
+    - uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: latest
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: terraform
+    
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+      working-directory: terraform
+
+    - name: Terraform Show
+      run: terraform show -json tfplan > tfplan.json
+      working-directory: terraform
+
+    - name: Upload Terraform Plan
+      uses: actions/upload-artifact@v2
+      with:
+        name: terraform-plan-${{ github.sha }}
+        path: terraform/tfplan.json
+
+    

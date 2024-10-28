@@ -1,7 +1,7 @@
 name: Run OPA Tests
 on:
   workflow_run:
-    workflows: ["Java CI with Gradle"]
+    workflows: ["Terraform"]
     types: [completed]
 jobs:
   Run-OPA-Tests:
@@ -26,25 +26,15 @@ jobs:
     - name: OPA Version
       run: opa version
 
-    - uses: hashicorp/setup-terraform@v3
+    - name: Download Terraform Plan
+      uses: actions/download-artifact@v2
       with:
-        terraform_version: latest
-
-    - name: Terraform Init
-      run: terraform init
-      working-directory: terraform
-    
-    - name: Terraform Plan
-      run: terraform plan -out=tfplan2
-      working-directory: terraform
-
-    - name: Terraform Show
-      run: terraform show -json tfplan2 > tfplan2.json
-      working-directory: terraform
+        name: terraform-plan-${{ github.event.workflow_run.head_commit.id }}
+        path: ./terraform
 
     - name: Run OPA Tests
       run: |
-        opa eval --data  tests/terraform.rego --input  terraform/tfplan2.json "data.terraform.analysis.resource_change_summary" > opa_result.json
+        opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terraform.analysis.resource_change_summary" > opa_result.json
         cat opa_result.json
         opa_result=$(jq -c '.result[0].expressions[0].value' opa_result.json)
         echo $opa_result
