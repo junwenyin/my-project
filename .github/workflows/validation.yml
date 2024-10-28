@@ -1,8 +1,11 @@
 name: Run New Service Validation
 on:
-  workflow_run:
-    workflows: ["Terraform"]
-    types: [completed]
+  workflow_call:
+    inputs:
+      run_id:
+        description: 'Specify the run id'
+        required: true
+        default: null
 jobs:
   Run-OPA-Tests:
     runs-on: ubuntu-latest
@@ -34,7 +37,7 @@ jobs:
         name: terraform-plan
         path: ./terraform
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        run-id: ${{ github.event.workflow_run.id }}
+        run-id: ${{ inputs.run_id }}
 
     - name: Run OPA Tests
       run: |

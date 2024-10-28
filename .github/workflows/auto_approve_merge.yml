@@ -1,0 +1,46 @@
+name: Auto Approve and Merge Pull Request
+on:
+  workflow_call:
+    inputs:
+      is_validated:
+        description: 'Specify if the PR is validated'
+        required: true
+        default: false
+      pr_number:
+        description: 'Specify the PR number'
+        required: true
+        default: null
+jobs:
+  Approve-Merge-PR:
+    runs-on: ubuntu-latest
+    steps:
+
+    # Print the GitHub event context
+    - name: Print GitHub Event Context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: |
+        echo "GitHub Event Context:"
+        echo "$GITHUB_CONTEXT"
+      shell: bash
+
+    # Approve the PR if the "approved" attribute is true
+    - name: Approve Pull Request
+      if: inputs.is_validated == 'true' && inputs.pr_number != null
+      uses: octokit/request-action@v2.4.0
+      with:
+        route: POST /repos/${{ github.repository }}/pulls/${{ input.pr_number }}/reviews
+        body: 'The automated process has approved this PR.'
+        owner: review_bot
+        event: APPROVE
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # Merge the PR if the "approved" attribute is true
+    - name: Mergr Pull Request
+      if: inputs.is_validated == 'true' && inputs.pr_number != null
+      uses: octokit/request-action@v2.4.0
+      with:
+        route: PUT /repos/${{ github.repository }}/pulls/${{ input.pr_number }}/merge
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
