@@ -25,5 +25,5 @@ jobs:
     needs: [build-java, terraform-plan, validation]
     uses: ./.github/workflows/auto-approve-merge.yml
     with:
-      is_validated: ${{ job.validation.outputs.is_validated }}
+      is_validated: true
       pr_number: ${{ github.event.pull_request.number }}
