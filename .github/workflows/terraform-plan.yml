@@ -1,0 +1,47 @@
+name: Terraform Plan
+
+on:
+  workflow_call:
+
+jobs:
+  Run-Terraform:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4
+
+    # Print the GitHub event context
+    - name: Print GitHub Event Context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: |
+        echo "GitHub Event Context:"
+        echo "$GITHUB_CONTEXT"
+      shell: bash
+
+    - uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: latest
+
+    - name: Terraform Init
+      run: terraform init
+      working-directory: terraform
+    
+    - name: Terraform Plan
+      run: terraform plan -out=tfplan
+      working-directory: terraform
+
+    - name: Terraform Show
+      run: terraform show -json tfplan > tfplan.json
+      working-directory: terraform
+
+    - name: Upload Terraform Plan
+      uses: actions/upload-artifact@v4
+      with:
+        name: terraform-plan
+        path: terraform/tfplan.json
+        retention-days: 1
+        overwrite: true
+
+
+    
