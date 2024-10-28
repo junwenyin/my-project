@@ -1,6 +1,10 @@
 name: Run New Service Validation
 on:
   workflow_call:
+    outputs:
+      is_validated:
+        description: 'Validation status'
+        value: ${{ jobs.Run-OPA-Tests.outputs.is_validated }}
 
 jobs:
   Run-OPA-Tests:
