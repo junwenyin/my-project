@@ -29,7 +29,7 @@ jobs:
     - name: Download Terraform Plan
       uses: actions/download-artifact@v4
       with:
-        name: terraform-plan-${{ github.event.workflow_run.head_commit.id }}
+        name: terraform-plan-${{ github.sha }}
         path: ./terraform
 
     - name: Run OPA Tests
