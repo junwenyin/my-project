@@ -6,6 +6,7 @@ on:
         description: 'Specify the run id'
         required: true
         default: null
+        type: number
 jobs:
   Run-OPA-Tests:
     runs-on: ubuntu-latest

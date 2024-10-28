@@ -6,9 +6,11 @@ on:
         description: 'Specify if the PR is validated'
         required: true
         default: false
+        type: boolean
       pr_number:
         description: 'Specify the PR number'
         required: true
+        type: number
         default: null
 jobs:
   Approve-Merge-PR:

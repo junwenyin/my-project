@@ -8,6 +8,7 @@ on:
     inputs:
       java_version:
         description: 'Specify the Java version'
+        type: string
         required: true
         default: '8'
 
