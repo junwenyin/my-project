@@ -10,7 +10,7 @@ on:
         description: 'Specify the Java version'
         type: string
         required: false
-        default: '8'
+        default: '17'
       distribution:
         description: 'Specify the java distribution'
         type: string
