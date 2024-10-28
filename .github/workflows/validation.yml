@@ -56,3 +56,4 @@ jobs:
         opa_authz=$(jq -c '.' opa_authz.json)
         echo $opa_authz
         echo "is_validated=$opa_authz" >> $GITHUB_ENV
+        echo "::set-output name=is_validated::$opa_authz" # Set step output
