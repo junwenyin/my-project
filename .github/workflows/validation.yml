@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       is_validated: ${{ steps.step_validated.outputs.is_validated }}
+      opa_result: ${{ steps.step_tests.outputs.opa_result }}
     steps:
     - name: Check out repository code
       uses: actions/checkout@v4
@@ -40,13 +41,14 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Run OPA Tests
+      id: step_tests
       run: |
         opa eval --data  tests/terraform.rego --input  terraform/tfplan.json "data.terraform.policy.resource_change_limits.resource_change_summary" -f raw > opa_result.json
         cat opa_result.json
         opa_result=$(jq -c '.' opa_result.json)
         echo $opa_result
         escaped_result=$(echo "$opa_result" | sed 's/"/\\"/g')
-        echo "opa_result=$escaped_result" >> $GITHUB_ENV
+        echo "opa_result=$escaped_result" >> $GITHUB_OUTPUT
 
     - name: Run OPA Validation
       id: step_validated
@@ -55,5 +57,4 @@ jobs:
         cat opa_authz.json
         opa_authz=$(jq -c '.' opa_authz.json)
         echo $opa_authz
-        echo "is_validated=$opa_authz" >> $GITHUB_ENV
-        echo "::set-output name=is_validated::$opa_authz" # Set step output
+        echo "is_validated=$opa_authz" >> $GITHUB_OUTPUT
