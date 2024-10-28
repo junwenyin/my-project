@@ -31,6 +31,7 @@ jobs:
       with:
         name: terraform-plan-${{ github.sha }}
         path: ./terraform
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         run-id: ${{ github.event.workflow_run.id }}
 
     - name: Run OPA Tests

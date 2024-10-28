@@ -35,6 +35,7 @@ jobs:
         name: terraform-plan-${{ github.sha }}
         path: terraform/tfplan.json
         retention-days: 1
+        overwrite: true
 
 
     
