@@ -48,25 +48,4 @@ jobs:
         cat opa_authz.json
         opa_authz=$(jq -c '.' opa_authz.json)
         echo $opa_authz
-        echo "opa_authz=$opa_authz" >> $GITHUB_ENV        
-
-    # Approve the PR if the "approved" attribute is true
-    - name: Approve Pull Request
-      if: github.event.workflow_run.event == 'pull_request' && env.opa_authz == 'true'
-      uses: octokit/request-action@v2.4.0
-      with:
-        route: POST /repos/${{ github.repository }}/pulls/${{ github.event.workflow_run.pull_requests[0].number }}/reviews
-        body: 'The automated process has approved this PR.'
-        owner: review_bot
-        event: APPROVE
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    # Merge the PR if the "approved" attribute is true
-    - name: Mergr Pull Request
-      if: github.event.workflow_run.event == 'pull_request' && env.opa_authz == 'true'
-      uses: octokit/request-action@v2.4.0
-      with:
-        route: PUT /repos/${{ github.repository }}/pulls/${{ github.event.workflow_run.pull_requests[0].number }}/merge
-      env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        echo "opa_authz=$opa_authz" >> $GITHUB_ENV
