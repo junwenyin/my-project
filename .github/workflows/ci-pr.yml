@@ -11,11 +11,14 @@ on:
 jobs:
   build-java:
     uses: ./.github/workflows/build-java.yml
+    secrets: inherit
   terraform-plan:
     uses: ./.github/workflows/terraform-plan.yml
+    secrets: inherit
   validation:
     needs: [terraform-plan]
     uses: ./.github/workflows/validation.yml
+    secrets: inherit
   auto-approve-merge:
     if: github.event_name == 'pull_request'
     needs: [build-java, terraform-plan, validation]
