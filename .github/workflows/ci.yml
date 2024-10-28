@@ -18,6 +18,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    # Print the GitHub event context
+    - name: Print GitHub Event Context
+      run: |
+        echo "GitHub Event Context:"
+        echo "${{ toJson(github) }}"
+
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
