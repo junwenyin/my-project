@@ -31,7 +31,7 @@ jobs:
     - name: Download Terraform Plan
       uses: actions/download-artifact@v4
       with:
-        name: terraform-plan-${{ github.sha }}
+        name: terraform-plan
         path: ./terraform
         github-token: ${{ secrets.GITHUB_TOKEN }}
         run-id: ${{ github.event.workflow_run.id }}
