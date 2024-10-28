@@ -5,8 +5,7 @@ on:
       is_validated:
         description: 'Specify if the PR is validated'
         required: true
-        default: false
-        type: boolean
+        type: string
       pr_number:
         description: 'Specify the PR number'
         required: true
@@ -27,7 +26,7 @@ jobs:
 
     # Approve the PR if the "approved" attribute is true
     - name: Approve Pull Request
-      if: inputs.is_validated && inputs.pr_number != null
+      if: inputs.is_validated == 'true' && inputs.pr_number != null
       uses: octokit/request-action@v2.4.0
       with:
         route: POST /repos/${{ github.repository }}/pulls/${{ inputs.pr_number }}/reviews
@@ -39,7 +38,7 @@ jobs:
 
     # Merge the PR if the "approved" attribute is true
     - name: Mergr Pull Request
-      if: inputs.is_validated && inputs.pr_number != null
+      if: inputs.is_validated == 'true' && inputs.pr_number != null
       uses: octokit/request-action@v2.4.0
       with:
         route: PUT /repos/${{ github.repository }}/pulls/${{ inputs.pr_number }}/merge
