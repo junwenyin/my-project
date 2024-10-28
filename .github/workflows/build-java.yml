@@ -38,7 +38,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: ${{ inputs.java_version }}
-        distribution: ${{ inputs.distribution }}
+        #distribution: ${{ inputs.distribution }}
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew

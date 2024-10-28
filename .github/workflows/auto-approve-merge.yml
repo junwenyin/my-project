@@ -30,9 +30,6 @@ jobs:
       uses: octokit/request-action@v2.4.0
       with:
         route: POST /repos/${{ github.repository }}/pulls/${{ inputs.pr_number }}/reviews
-        body: 'The automated process has approved this PR.'
-        owner: review_bot
-        event: APPROVE
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
