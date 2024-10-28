@@ -13,8 +13,6 @@ on:
 jobs:
   build-java:
     uses: ./.github/workflows/build-java.yml
-    with:
-      java_version: '8'
   terraform-plan:
     uses: ./.github/workflows/terraform-plan.yml
   validation:
