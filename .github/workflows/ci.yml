@@ -25,3 +25,4 @@ jobs:
     with:
       is_validated: true
       pr_number: ${{ github.event.pull_request.number }}
+    secrets: inherit
