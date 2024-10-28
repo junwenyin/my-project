@@ -4,12 +4,12 @@ on:
     inputs:
       is_validated:
         description: 'Specify if the PR is validated'
-        required: true
+        required: false
         default: false
         type: boolean
       pr_number:
         description: 'Specify the PR number'
-        required: true
+        required: false
         type: number
         default: null
 jobs:

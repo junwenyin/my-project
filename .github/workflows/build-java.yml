@@ -9,7 +9,7 @@ on:
       java_version:
         description: 'Specify the Java version'
         type: string
-        required: true
+        required: false
         default: '8'
 
 jobs:
