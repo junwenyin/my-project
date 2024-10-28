@@ -4,14 +4,13 @@ on:
     inputs:
       is_validated:
         description: 'Specify if the PR is validated'
-        required: false
+        required: true
         default: false
         type: boolean
       pr_number:
         description: 'Specify the PR number'
-        required: false
+        required: true
         type: number
-        default: null
 jobs:
   Approve-Merge-PR:
     runs-on: ubuntu-latest
