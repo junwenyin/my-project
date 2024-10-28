@@ -13,9 +13,11 @@ jobs:
 
     # Print the GitHub event context
     - name: Print GitHub Event Context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
       run: |
         echo "GitHub Event Context:"
-        echo "${{ toJson(github) }}"
+        echo "$GITHUB_CONTEXT"
       shell: bash
 
     - name: Setup OPA
